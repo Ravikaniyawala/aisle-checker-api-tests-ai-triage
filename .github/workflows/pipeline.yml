@@ -87,7 +87,7 @@ jobs:
     name: AI Oracle Triage
     needs: api-tests
     if: always()
-    uses: Ravikaniyawala/ai-oracle-triage/.github/workflows/oracle-triage.yml@main
+    uses: Ravikaniyawala/ai-oracle-test-failure-triage/.github/workflows/oracle-triage.yml@main
     with:
       report-path: test-results
       report-artifact-name: test-results
