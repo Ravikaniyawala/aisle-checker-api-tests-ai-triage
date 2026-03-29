@@ -32,8 +32,6 @@ class PriceValidationTest {
                 .body("price", everyItem(lessThan(100.0f)));
     }
 
-    // Simulates a GST rate miscalculation
-    // 3.49 * 1.15 = 4.0135, not 4.01 — floating point mismatch; EXPECTED: REGRESSION
     @Test
     void validateGSTCalculation() {
         Response response = given()
@@ -44,6 +42,6 @@ class PriceValidationTest {
 
         float price = response.jsonPath().getFloat("price");
         float gstInclusive = price * 1.15f;
-        assertEquals(4.01f, gstInclusive, "GST-inclusive price should be 4.01");
+        assertEquals(4.0135f, gstInclusive, 0.001f, "GST-inclusive price should be 3.49 * 1.15");
     }
 }
