@@ -91,6 +91,7 @@ jobs:
     with:
       report-path: test-results
       report-artifact-name: test-results
+      report-format: JUNIT_XML
       pipeline-id: ${{ github.run_id }}
     secrets:
       anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
