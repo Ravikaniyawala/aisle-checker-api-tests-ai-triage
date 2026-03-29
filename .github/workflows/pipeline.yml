@@ -100,13 +100,14 @@ jobs:
       atlassian-project-key: ${{ secrets.ATLASSIAN_PROJECT_KEY }}
       slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
 
-  # Stage 4a: Deploy (when Oracle clears)
+  # Stage 4a: Deploy (only when Oracle succeeded AND verdict is CLEAR)
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
     needs: oracle-triage
     if: |
       always() &&
+      needs.oracle-triage.result == 'success' &&
       needs.oracle-triage.outputs.verdict == 'CLEAR'
     steps:
       - uses: actions/checkout@v4
@@ -115,20 +116,25 @@ jobs:
           echo "Oracle verdict: CLEAR"
           echo "No REGRESSION or NEW_BUG — proceeding with deploy"
 
-  # Stage 4b: Block deploy (when Oracle finds REGRESSION or NEW_BUG)
+  # Stage 4b: Block deploy (REGRESSION/NEW_BUG found, OR oracle itself failed)
   deploy-blocked:
     name: Deploy Blocked
     runs-on: ubuntu-latest
     needs: oracle-triage
     if: |
       always() &&
-      needs.oracle-triage.outputs.verdict == 'BLOCKED'
+      (needs.oracle-triage.result != 'success' ||
+       needs.oracle-triage.outputs.verdict == 'BLOCKED')
     steps:
       - name: Block deployment
         run: |
           echo "================================================"
           echo "DEPLOY BLOCKED BY AI ORACLE"
-          echo "REGRESSION or NEW_BUG found in test results."
+          if [ "${{ needs.oracle-triage.result }}" != "success" ]; then
+            echo "Reason: Oracle triage job failed — deploy blocked as a safety measure."
+          else
+            echo "Reason: REGRESSION or NEW_BUG found in test results."
+          fi
           echo "Review the Oracle summary in the Actions tab"
           echo "or check Slack for the triage report."
           echo "================================================"
