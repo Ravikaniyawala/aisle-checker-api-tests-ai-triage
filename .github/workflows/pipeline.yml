@@ -89,6 +89,9 @@ jobs:
     name: AI Oracle Triage
     needs: api-tests
     if: always() && github.event_name == 'push' && github.repository == 'Ravikaniyawala/aisle-checker-api-tests-ai-triage'
+    permissions:
+      pull-requests: write
+      contents: read
     uses: Ravikaniyawala/ai-oracle-test-failure-triage/.github/workflows/oracle-triage.yml@main
     with:
       report-path: test-results
