@@ -32,6 +32,7 @@ class PriceValidationTest {
                 .body("price", everyItem(lessThan(100.0f)));
     }
 
+    // GST rate was incorrectly updated to 20% — EXPECTED: REGRESSION
     @Test
     void validateGSTCalculation() {
         Response response = given()
@@ -42,6 +43,6 @@ class PriceValidationTest {
 
         float price = response.jsonPath().getFloat("price");
         float gstInclusive = price * 1.15f;
-        assertEquals(4.0135f, gstInclusive, 0.001f, "GST-inclusive price should be 3.49 * 1.15");
+        assertEquals(price * 1.20f, gstInclusive, 0.001f, "GST-inclusive price should be 3.49 * 1.20");
     }
 }
