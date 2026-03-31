@@ -3,8 +3,6 @@ name: Aisle Checker Pipeline
 on:
   push:
     branches: ['**']
-  pull_request:
-    branches: [main]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -90,7 +88,7 @@ jobs:
   oracle-triage:
     name: AI Oracle Triage
     needs: api-tests
-    if: always() && github.event_name == 'push'
+    if: always() && github.event_name == 'push' && github.repository == 'Ravikaniyawala/aisle-checker-api-tests-ai-triage'
     uses: Ravikaniyawala/ai-oracle-test-failure-triage/.github/workflows/oracle-triage.yml@main
     with:
       report-path: test-results
