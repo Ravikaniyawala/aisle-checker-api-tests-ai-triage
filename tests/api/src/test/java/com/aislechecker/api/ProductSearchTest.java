@@ -17,6 +17,7 @@ class ProductSearchTest {
         RestAssured.baseURI = BASE_URL;
     }
 
+    // Product name changed — simulates a name regression
     @Test
     void searchProductById() {
         given()
@@ -24,7 +25,7 @@ class ProductSearchTest {
                 .get("/api/products/1")
             .then()
                 .statusCode(200)
-                .body("name", equalTo("Full Cream Milk 2L"));
+                .body("name", equalTo("Full Cream Milk 3L")); // wrong — real name is 2L
     }
 
     @Test
