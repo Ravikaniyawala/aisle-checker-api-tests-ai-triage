@@ -17,7 +17,6 @@ class ProductSearchTest {
         RestAssured.baseURI = BASE_URL;
     }
 
-    // Product name changed — simulates a name regression
     @Test
     void searchProductById() {
         given()
@@ -25,7 +24,7 @@ class ProductSearchTest {
                 .get("/api/products/1")
             .then()
                 .statusCode(200)
-                .body("name", equalTo("Full Cream Milk 3L")); // wrong — real name is 2L
+                .body("name", equalTo("Full Cream Milk 2L"));
     }
 
     @Test
@@ -37,7 +36,6 @@ class ProductSearchTest {
                 .statusCode(404);
     }
 
-    // Simulates a price change regression
     @Test
     void searchProductWithWrongPriceAssertion() {
         given()
@@ -45,6 +43,6 @@ class ProductSearchTest {
                 .get("/api/products/2")
             .then()
                 .statusCode(200)
-                .body("price", equalTo(4.99f)); // wrong — real price is 5.99; EXPECTED: REGRESSION
+                .body("price", equalTo(5.99f));
     }
 }

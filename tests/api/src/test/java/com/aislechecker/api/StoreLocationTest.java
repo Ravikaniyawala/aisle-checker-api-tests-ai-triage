@@ -27,7 +27,6 @@ class StoreLocationTest {
                 .body("$", hasSize(2));
     }
 
-    // North store stock was reduced — assertion expects 6 products but API returns 4
     @Test
     void getProductsAtNorthStore() {
         given()
@@ -35,7 +34,7 @@ class StoreLocationTest {
                 .get("/api/store/north/products")
             .then()
                 .statusCode(200)
-                .body("$", hasSize(6));
+                .body("$", hasSize(4));
     }
 
     @Test
