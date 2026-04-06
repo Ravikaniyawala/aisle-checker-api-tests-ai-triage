@@ -45,4 +45,13 @@ class StoreLocationTest {
             .then()
                 .statusCode(404);
     }
+
+    @Test
+    void getStoreInventorySummary() {
+        given()
+            .when()
+                .get("/api/store/inventory/summary") // endpoint does not exist — expected NEW_BUG
+            .then()
+                .statusCode(200);
+    }
 }
