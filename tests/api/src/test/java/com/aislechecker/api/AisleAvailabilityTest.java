@@ -46,7 +46,7 @@ class AisleAvailabilityTest {
                 .get("/api/products/1/availability")
             .then()
                 .statusCode(200)
-                .time(lessThan(5000L));
+                .time(lessThan(30L)); // experiment: intentionally tight timing — expected FLAKY
     }
 
     @Test
