@@ -55,6 +55,6 @@ class AisleAvailabilityTest {
             .when()
                 .get("/api/products/availability/bulk") // endpoint does not exist
             .then()
-                .statusCode(404);
+                .statusCode(200); // experiment run-10: NEW_BUG
     }
 }
