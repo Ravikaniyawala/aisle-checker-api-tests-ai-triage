@@ -34,7 +34,7 @@ class StoreLocationTest {
                 .get("/api/store/north/products")
             .then()
                 .statusCode(200)
-                .body("$", hasSize(4));
+                .body("$", hasSize(6)); // experiment: wrong count — expected REGRESSION
     }
 
     @Test
