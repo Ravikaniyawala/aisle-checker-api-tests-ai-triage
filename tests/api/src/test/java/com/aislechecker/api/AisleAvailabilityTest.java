@@ -46,7 +46,7 @@ class AisleAvailabilityTest {
                 .get("/api/products/1/availability")
             .then()
                 .statusCode(200)
-                .time(lessThan(1L)); // experiment: impossible timing threshold — expected FLAKY
+                .time(lessThan(5000L));
     }
 
     @Test
@@ -55,6 +55,6 @@ class AisleAvailabilityTest {
             .when()
                 .get("/api/products/availability/bulk") // endpoint does not exist
             .then()
-                .statusCode(200); // experiment run-10: NEW_BUG
+                .statusCode(404);
     }
 }
