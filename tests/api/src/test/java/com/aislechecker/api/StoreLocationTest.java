@@ -34,7 +34,7 @@ class StoreLocationTest {
                 .get("/api/store/north/products")
             .then()
                 .statusCode(200)
-                .body("$", hasSize(6)); // experiment: wrong count — expected REGRESSION
+                .body("$", hasSize(4));
     }
 
     @Test
@@ -46,12 +46,4 @@ class StoreLocationTest {
                 .statusCode(404);
     }
 
-    @Test
-    void getStoreInventorySummary() {
-        given()
-            .when()
-                .get("/api/store/inventory/summary") // endpoint does not exist — expected NEW_BUG
-            .then()
-                .statusCode(200);
-    }
 }

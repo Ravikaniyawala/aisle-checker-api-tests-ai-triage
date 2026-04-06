@@ -41,7 +41,7 @@ class PriceValidationTest {
         response.then().statusCode(200);
 
         float price = response.jsonPath().getFloat("price");
-        float gstInclusive = price * 1.20f; // experiment: wrong GST rate — expected REGRESSION
+        float gstInclusive = price * 1.15f;
         assertEquals(4.0135f, gstInclusive, 0.001f, "GST-inclusive price should be 3.49 * 1.15");
     }
 }

@@ -24,7 +24,7 @@ class ProductSearchTest {
                 .get("/api/products/1")
             .then()
                 .statusCode(200)
-                .body("name", equalTo("Full Cream Milk 3L")); // experiment: wrong product name — expected REGRESSION
+                .body("name", equalTo("Full Cream Milk 2L"));
     }
 
     @Test
