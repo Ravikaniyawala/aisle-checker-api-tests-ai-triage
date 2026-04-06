@@ -43,6 +43,6 @@ class ProductSearchTest {
                 .get("/api/products/2")
             .then()
                 .statusCode(200)
-                .body("price", equalTo(5.99f));
+                .body("price", equalTo(4.99f)); // experiment: wrong price — expected REGRESSION
     }
 }
