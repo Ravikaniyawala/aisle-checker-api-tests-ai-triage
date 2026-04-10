@@ -45,4 +45,5 @@ class StoreLocationTest {
             .then()
                 .statusCode(404);
     }
+
 }

@@ -104,6 +104,7 @@ jobs:
     secrets:
       anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
       atlassian-token: ${{ secrets.ATLASSIAN_TOKEN }}
+      atlassian-email: ${{ secrets.ATLASSIAN_EMAIL }}
       atlassian-base-url: ${{ secrets.ATLASSIAN_BASE_URL }}
       atlassian-project-key: ${{ secrets.ATLASSIAN_PROJECT_KEY }}
       slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
