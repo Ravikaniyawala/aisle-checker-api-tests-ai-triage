@@ -1,0 +1,39 @@
+version: "1.0"
+description: Maps UI features to the relevant test folders, POMs, and data.
+
+features:
+  products-list:
+    description: Browse all products with availability badges
+    ui_route: "/#/"
+    spec_folder: tests/products/
+    page_objects: [src/pages/ProductsPage.ts]
+    test_data: [src/test-data/products.ts → products, inStockProduct, outOfStockProduct, lowStockProduct]
+    api_endpoints:
+      - GET /api/products
+
+  product-detail:
+    description: View full product info including real-time availability from the API
+    ui_route: "/#/products/:id"
+    spec_folder: tests/product-detail/
+    page_objects: [src/pages/ProductDetailPage.ts]
+    test_data: [src/test-data/products.ts → inStockProduct, outOfStockProduct, lowStockProduct]
+    api_endpoints:
+      - GET /api/products/:id
+      - GET /api/products/:id/availability
+
+  stores:
+    description: Browse store locations and filter products by store
+    ui_route: "/#/stores"
+    spec_folder: tests/stores/
+    page_objects: [src/pages/StoresPage.ts]
+    test_data: [src/test-data/products.ts → stores, northStoreProducts, southStoreProducts]
+    api_endpoints:
+      - GET /api/store/locations
+      - GET /api/store/:locationId/products
+
+  navigation:
+    description: Navbar links between Products and Stores
+    shared_locators:
+      nav-products: data-test="nav-products"
+      nav-stores: data-test="nav-stores"
+    tested_in: [tests/stores/stores.spec.ts → STORE-005]

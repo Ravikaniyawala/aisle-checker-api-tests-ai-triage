@@ -1,0 +1,101 @@
+version: "1.0"
+description: >
+  Authoritative registry of all E2E test cases. Keep in sync with tests/**/*.spec.ts.
+  Run "npm run validate:inventory" after adding, renaming, or removing tests.
+
+tests:
+  - id: PROD-001
+    title: "products page loads and displays all products"
+    spec: tests/products/products.spec.ts
+    tags: ["@smoke", "@products"]
+    priority: P1
+
+  - id: PROD-002
+    title: "each product card shows name, price, aisle, and availability badge"
+    spec: tests/products/products.spec.ts
+    tags: ["@regression", "@products"]
+    priority: P1
+
+  - id: PROD-003
+    title: "in-stock product shows correct badge"
+    spec: tests/products/products.spec.ts
+    tags: ["@regression", "@products"]
+    priority: P1
+
+  - id: PROD-004
+    title: "out-of-stock product shows correct badge"
+    spec: tests/products/products.spec.ts
+    tags: ["@regression", "@products"]
+    priority: P1
+
+  - id: PROD-005
+    title: "low-stock product shows correct badge"
+    spec: tests/products/products.spec.ts
+    tags: ["@regression", "@products"]
+    priority: P1
+
+  - id: PROD-006
+    title: "clicking a product card navigates to product detail"
+    spec: tests/products/products.spec.ts
+    tags: ["@regression", "@products"]
+    priority: P2
+
+  - id: DETAIL-001
+    title: "product detail page shows correct information"
+    spec: tests/product-detail/product-detail.spec.ts
+    tags: ["@smoke", "@product-detail"]
+    priority: P1
+
+  - id: DETAIL-002
+    title: "detail page shows availability from API for in-stock product"
+    spec: tests/product-detail/product-detail.spec.ts
+    tags: ["@regression", "@product-detail"]
+    priority: P1
+
+  - id: DETAIL-003
+    title: "detail page shows availability from API for out-of-stock product"
+    spec: tests/product-detail/product-detail.spec.ts
+    tags: ["@regression", "@product-detail"]
+    priority: P1
+
+  - id: DETAIL-004
+    title: "detail page shows availability from API for low-stock product"
+    spec: tests/product-detail/product-detail.spec.ts
+    tags: ["@regression", "@product-detail"]
+    priority: P1
+
+  - id: DETAIL-005
+    title: "back link navigates to products page"
+    spec: tests/product-detail/product-detail.spec.ts
+    tags: ["@regression", "@product-detail"]
+    priority: P2
+
+  - id: STORE-001
+    title: "stores page loads and shows all store locations"
+    spec: tests/stores/stores.spec.ts
+    tags: ["@smoke", "@stores"]
+    priority: P1
+
+  - id: STORE-002
+    title: "selecting North Store shows its products"
+    spec: tests/stores/stores.spec.ts
+    tags: ["@regression", "@stores"]
+    priority: P1
+
+  - id: STORE-003
+    title: "selecting South Store shows its products"
+    spec: tests/stores/stores.spec.ts
+    tags: ["@regression", "@stores"]
+    priority: P1
+
+  - id: STORE-004
+    title: "North Store does not contain South-only products"
+    spec: tests/stores/stores.spec.ts
+    tags: ["@regression", "@stores"]
+    priority: P1
+
+  - id: STORE-005
+    title: "navbar Stores link navigates from products page"
+    spec: tests/stores/stores.spec.ts
+    tags: ["@regression", "@stores"]
+    priority: P2

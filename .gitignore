@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+target/
+
+# Playwright
+playwright-report/
+playwright-results/
+test-results/
+
+# Misc
+.DS_Store
+*.class

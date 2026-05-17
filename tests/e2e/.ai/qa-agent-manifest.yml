@@ -1,0 +1,82 @@
+version: "1.0"
+project: aisle-checker-e2e
+description: >
+  Agent-ready Playwright TypeScript E2E framework for the Aisle Checker UI.
+  Tests the React frontend (aisle-ui) which calls the Spring Boot REST API (aisle-api).
+
+# ─── Framework conventions ────────────────────────────────────────────────────
+conventions:
+  language: TypeScript (strict)
+  runner: "@playwright/test"
+  test_id_attribute: data-test       # maps getByTestId() → data-test="..."
+  base_url_env: BASE_URL             # default http://localhost:5173
+  api_base_url_env: VITE_API_BASE_URL
+
+  locator_priority:
+    - getByTestId (data-test="...")  # first choice
+    - getByRole with name            # second choice
+    - getByLabel / getByPlaceholder  # for form fields
+    - getByText                      # last resort, only stable text
+
+  imports:
+    test_and_expect: "from '../../src/fixtures/base'"
+    test_tags: "from '../../src/helpers/testTags'"
+    test_data: "from '../../src/test-data/products'"
+
+# ─── Anti-patterns (enforced by lint:anti-patterns script) ────────────────────
+anti_patterns:
+  AP-001:
+    name: Hardcoded sleep
+    forbidden: "page.waitForTimeout()"
+    use_instead: "expect(...).toBeVisible({ timeout: N }), or expect.poll()"
+  AP-002:
+    name: Try-catch reload
+    forbidden: "catch { page.reload() }"
+    use_instead: "expect.poll() or increase assertion timeout"
+  AP-003:
+    name: Raw CSS/ID selectors in specs
+    forbidden: "page.locator('#id'), page.locator('.classname')"
+    use_instead: "getByTestId(), getByRole(), getByLabel()"
+  AP-004:
+    name: Cross-cutting concerns in one helper
+    forbidden: "assertion helper that checks multiple unrelated concerns in one method"
+    use_instead: "split into focused named helpers, one responsibility per method"
+  AP-005:
+    name: Anti-patterns inside POMs
+    forbidden: "any AP-001 through AP-004 inside src/pages/"
+    use_instead: "document the workaround with a bug ID in the spec that calls it"
+  AP-006:
+    name: Implicit-only negative assertions
+    forbidden: "removing/filtering without asserting absence of removed item"
+    use_instead: "assert count + presence of remaining + absence of removed (expectStoreProductNotVisible)"
+
+# ─── Page Object rules ────────────────────────────────────────────────────────
+page_object_rules:
+  - Declare stable locators as readonly Locator properties initialised in constructor
+  - Expose meaningful user-level actions and assertions, NOT thin wrappers over locator calls
+  - Dynamic locators (filter by text, by index) are acceptable as private helpers or inline
+  - Never add waitForTimeout inside POMs
+  - Each POM owns exactly one page or logical section — see page-object-registry.yml
+
+# ─── Fixture rules ────────────────────────────────────────────────────────────
+fixture_rules:
+  - All tests import { test, expect } from src/fixtures/base
+  - Fixtures inject POM instances — tests never call new ProductsPage(page) directly
+  - Add new POM to the PageFixtures type AND the base.extend block
+
+# ─── Test data rules ──────────────────────────────────────────────────────────
+test_data_rules:
+  - All product data lives in src/test-data/products.ts
+  - Never hardcode product names, prices, or aisle codes inline in specs
+  - Use named exports: inStockProduct, outOfStockProduct, lowStockProduct
+  - Store data: northStoreProducts, southStoreProducts
+
+# ─── Guardrails for agents ────────────────────────────────────────────────────
+agent_guardrails:
+  - NEVER use waitForTimeout
+  - NEVER reference real production URLs or internal URLs — UI runs on localhost only
+  - NEVER add tests that depend on external network (tests use the local API only)
+  - NEVER run headed browser in CI — use headless only
+  - NEVER create new POMs without registering them in page-object-registry.yml
+  - NEVER add a test without a PROD-/DETAIL-/STORE- ID in test-inventory.yml
+  - RUN typecheck and lint:anti-patterns after writing any code

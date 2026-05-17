@@ -1,0 +1,69 @@
+version: "1.0"
+description: >
+  Source of truth for which Page Object Model owns which UI area.
+  Agents must check here before adding locators or methods to any POM.
+
+pages:
+  ProductsPage:
+    file: src/pages/ProductsPage.ts
+    url_pattern: "/#/" or "/"
+    owns:
+      - Product list grid (data-test="product-list")
+      - Product cards (data-test="product-card")
+      - Per-card name, price, aisle, availability badge
+      - Navigation links in navbar (navProducts, navStores)
+    does_not_own:
+      - Product detail content (owned by ProductDetailPage)
+      - Store-specific product lists (owned by StoresPage)
+    key_methods:
+      - goto(): navigate to products home
+      - expectLoaded(): assert product list is visible
+      - expectProductCount(n): assert number of product cards
+      - expectProductVisible(name): assert a card with given name exists
+      - clickProduct(name): click a named product card
+      - getCardByName(name): return Locator for a specific card
+      - expectCardShowsPrice(name, price): assert price on a card
+      - expectCardShowsAisle(name, aisle): assert aisle on a card
+      - expectCardShowsAvailability(name, status): assert data-status on badge
+
+  ProductDetailPage:
+    file: src/pages/ProductDetailPage.ts
+    url_pattern: "/#/products/:id"
+    owns:
+      - Product detail container (data-test="product-detail-page")
+      - Detail name, price, aisle, availability badge
+      - Back link (data-test="back-link")
+    does_not_own:
+      - Product list (owned by ProductsPage)
+      - Any store-specific content (owned by StoresPage)
+    key_methods:
+      - goto(id): navigate to product detail by ID
+      - expectLoaded(): assert detail container is visible
+      - expectProductName(name): assert name heading
+      - expectProductPrice(price): assert price value
+      - expectProductAisle(aisle): assert aisle value
+      - expectAvailabilityStatus(status): assert data-status on badge
+      - goBackToProducts(): click back link
+
+  StoresPage:
+    file: src/pages/StoresPage.ts
+    url_pattern: "/#/stores"
+    owns:
+      - Stores page container (data-test="stores-page")
+      - Store list (data-test="store-list")
+      - Store cards (data-test="store-card")
+      - Store products section (data-test="store-products-section")
+      - Store products list (data-test="store-products-list")
+    does_not_own:
+      - Global navbar (shared, handled inline via navStores locator in ProductsPage)
+      - Product detail view (owned by ProductDetailPage)
+    key_methods:
+      - goto(): navigate to stores page
+      - expectLoaded(): assert store list is visible
+      - expectStoreCount(n): assert number of store cards
+      - expectStoreVisible(name): assert a store card with given name exists
+      - selectStore(name): click a named store card
+      - expectStoreProductsVisible(): assert product list section appears
+      - expectStoreProductCount(n): assert number of product cards in store section
+      - expectStoreProductVisible(name): assert product appears in store section
+      - expectStoreProductNotVisible(name): assert product absent from store section
