@@ -1,0 +1,64 @@
+version: "1.0"
+description: >
+  All test data used by the E2E suite. Agents must use these values —
+  never hardcode product names, prices, or store IDs directly in spec files.
+
+products:
+  - id: 1
+    name: "Full Cream Milk 2L"
+    price: "$3.49"
+    aisle: "A3"
+    availability: in_stock
+    export_alias: inStockProduct
+
+  - id: 2
+    name: "Sourdough Bread"
+    price: "$5.99"
+    aisle: "B1"
+    availability: in_stock
+
+  - id: 3
+    name: "Free Range Eggs 12pk"
+    price: "$7.49"
+    aisle: "A5"
+    availability: out_of_stock
+    export_alias: outOfStockProduct
+
+  - id: 4
+    name: "Cheddar Cheese 500g"
+    price: "$8.99"
+    aisle: "A3"
+    availability: low_stock
+    export_alias: lowStockProduct
+
+  - id: 5
+    name: "Organic Pasta 500g"
+    price: "$4.29"
+    aisle: "C2"
+    availability: in_stock
+
+  - id: 6
+    name: "Orange Juice 1L"
+    price: "$4.99"
+    aisle: "A3"
+    availability: out_of_stock
+
+stores:
+  - id: north
+    name: "North Store"
+    product_ids: [1, 2, 3, 4]
+    export_alias: northStoreProducts
+
+  - id: south
+    name: "South Store"
+    product_ids: [1, 4, 5, 6]
+    export_alias: southStoreProducts
+
+availability_logic:
+  description: >
+    Derived on the frontend from Product fields. Also verified via
+    /api/products/{id}/availability on the detail page.
+  rules:
+    - if available == false → out_of_stock
+    - if available == true AND price > 7.0 → low_stock
+    - else → in_stock
