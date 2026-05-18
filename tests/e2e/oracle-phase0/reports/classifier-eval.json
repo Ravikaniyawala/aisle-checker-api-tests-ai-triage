@@ -1,0 +1,112 @@
+{
+  "handCrafted": {
+    "total": 80,
+    "byKind": {
+      "locator_drift_data_testid_only": {
+        "total": 20,
+        "correct": 20,
+        "incorrect": 0,
+        "unclassified": 0,
+        "accuracy": 1
+      },
+      "locator_drift_css_class_only": {
+        "total": 20,
+        "correct": 20,
+        "incorrect": 0,
+        "unclassified": 0,
+        "accuracy": 1
+      },
+      "locator_drift_user_visible_text": {
+        "total": 20,
+        "correct": 20,
+        "incorrect": 0,
+        "unclassified": 0,
+        "accuracy": 1
+      },
+      "locator_drift_dom_structure": {
+        "total": 20,
+        "correct": 20,
+        "incorrect": 0,
+        "unclassified": 0,
+        "accuracy": 1
+      }
+    },
+    "overall": {
+      "total": 80,
+      "correct": 80,
+      "incorrect": 0,
+      "unclassified": 0,
+      "accuracy": 1
+    },
+    "confusion": {
+      "locator_drift_data_testid_only": {
+        "locator_drift_data_testid_only": 20
+      },
+      "locator_drift_css_class_only": {
+        "locator_drift_css_class_only": 20
+      },
+      "locator_drift_user_visible_text": {
+        "locator_drift_user_visible_text": 20
+      },
+      "locator_drift_dom_structure": {
+        "locator_drift_dom_structure": 20
+      }
+    },
+    "failures": []
+  },
+  "fullSet": {
+    "total": 280,
+    "byKind": {
+      "locator_drift_data_testid_only": {
+        "total": 70,
+        "correct": 70,
+        "incorrect": 0,
+        "unclassified": 0,
+        "accuracy": 1
+      },
+      "locator_drift_css_class_only": {
+        "total": 70,
+        "correct": 70,
+        "incorrect": 0,
+        "unclassified": 0,
+        "accuracy": 1
+      },
+      "locator_drift_user_visible_text": {
+        "total": 70,
+        "correct": 70,
+        "incorrect": 0,
+        "unclassified": 0,
+        "accuracy": 1
+      },
+      "locator_drift_dom_structure": {
+        "total": 70,
+        "correct": 70,
+        "incorrect": 0,
+        "unclassified": 0,
+        "accuracy": 1
+      }
+    },
+    "overall": {
+      "total": 280,
+      "correct": 280,
+      "incorrect": 0,
+      "unclassified": 0,
+      "accuracy": 1
+    },
+    "confusion": {
+      "locator_drift_data_testid_only": {
+        "locator_drift_data_testid_only": 70
+      },
+      "locator_drift_css_class_only": {
+        "locator_drift_css_class_only": 70
+      },
+      "locator_drift_user_visible_text": {
+        "locator_drift_user_visible_text": 70
+      },
+      "locator_drift_dom_structure": {
+        "locator_drift_dom_structure": 70
+      }
+    },
+    "failures": []
+  }
+}

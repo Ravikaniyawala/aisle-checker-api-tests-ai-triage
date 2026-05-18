@@ -1,0 +1,83 @@
+{
+  "declaredTopology": "monorepo_e2e",
+  "state": "partial",
+  "topologyAllowsAuto": false,
+  "productSourcePatternsTried": {
+    "include": [
+      "app/**",
+      "src/**",
+      "lib/**",
+      "packages/*/src/**",
+      "apps/*/src/**"
+    ],
+    "exclude": [
+      "**/*.spec.*",
+      "**/*.test.*",
+      "**/__tests__/**",
+      "src/test-utils/**",
+      "src/generated/**",
+      "**/generated/**",
+      "**/vendor/**",
+      "**/fixtures/**",
+      "**/page-objects/**",
+      "apps/*/dist/**"
+    ]
+  },
+  "allowedEditPathsTried": [
+    "tests/**",
+    "e2e/**",
+    "playwright/**",
+    "page-objects/**",
+    "fixtures/**",
+    "test-utils/**",
+    "src/**/__tests__/**",
+    "src/**/*.spec.*",
+    "src/**/*.test.*"
+  ],
+  "resolvedAllowedEditPathsSample": [
+    "tests/api/pom.xml",
+    "tests/api/src/test/java/com/aislechecker/api/AisleAvailabilityTest.java",
+    "tests/api/src/test/java/com/aislechecker/api/PriceValidationTest.java",
+    "tests/api/src/test/java/com/aislechecker/api/ProductSearchTest.java",
+    "tests/api/src/test/java/com/aislechecker/api/StoreLocationTest.java",
+    "tests/e2e/.ai/feature-map.yml",
+    "tests/e2e/.ai/page-object-registry.yml",
+    "tests/e2e/.ai/qa-agent-manifest.yml",
+    "tests/e2e/.ai/test-data-catalog.yml",
+    "tests/e2e/.ai/test-inventory.yml",
+    "tests/e2e/oracle-phase0/README.md",
+    "tests/e2e/oracle-phase0/fixtures/drift-cases.ts",
+    "tests/e2e/oracle-phase0/fixtures/playwright-errors.ts",
+    "tests/e2e/oracle-phase0/package-lock.json",
+    "tests/e2e/oracle-phase0/package.json",
+    "tests/e2e/oracle-phase0/reporter/prompt-reporter.ts",
+    "tests/e2e/oracle-phase0/reports/PHASE0_FINDINGS.md",
+    "tests/e2e/oracle-phase0/reports/classifier-eval.json",
+    "tests/e2e/oracle-phase0/reports/defaults-reconciliation.json",
+    "tests/e2e/oracle-phase0/reports/reporter-coverage.json"
+  ],
+  "resolvedProductSourcePathsSample": [
+    "apps/aisle-api/src/main/java/com/aislechecker/AisleApplication.java",
+    "apps/aisle-api/src/main/java/com/aislechecker/config/CorsConfig.java",
+    "apps/aisle-api/src/main/java/com/aislechecker/controller/AisleController.java",
+    "apps/aisle-api/src/main/java/com/aislechecker/model/AisleLocation.java",
+    "apps/aisle-api/src/main/java/com/aislechecker/model/Product.java",
+    "apps/aisle-api/src/main/java/com/aislechecker/service/AisleService.java",
+    "apps/aisle-ui/src/App.tsx",
+    "apps/aisle-ui/src/api/client.ts",
+    "apps/aisle-ui/src/components/AvailabilityBadge.tsx",
+    "apps/aisle-ui/src/components/NavBar.tsx",
+    "apps/aisle-ui/src/index.css",
+    "apps/aisle-ui/src/main.tsx",
+    "apps/aisle-ui/src/pages/ProductDetailPage.tsx",
+    "apps/aisle-ui/src/pages/ProductsPage.tsx",
+    "apps/aisle-ui/src/pages/StoresPage.tsx",
+    "apps/aisle-ui/src/types.ts",
+    "apps/aisle-ui/src/vite-env.d.ts"
+  ],
+  "validationFailures": [],
+  "validationWarnings": [
+    "topology_app_change_visibility_unproven: no historical PR context overlapping with PRODUCT_SOURCE_PATTERNS yet. Will upgrade to full once a PR touches product source."
+  ],
+  "appChangeVisibilityProven": false
+}
