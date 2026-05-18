@@ -1,0 +1,259 @@
+{
+  "fixturesTotal": 50,
+  "parserSuccesses": 46,
+  "parserNullExpected": 4,
+  "parserAccuracy": 1,
+  "endToEndCoverage": 1,
+  "perFixtureDetail": [
+    {
+      "id": "err-01-gettestid-timeout",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-02-gettestid-fill-timeout",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-03-gettestid-visible-assertion",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-04-gettestid-count-mismatch",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-05-gettestid-aisle-checker-stores",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-06-getbyrole-button-name",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-07-getbyrole-link-name",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-08-getbyrole-heading",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-09-getbyrole-no-name",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-10-getbyrole-with-spaces",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-11-gettext-timeout",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-12-gettext-multiline",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-13-getlabel",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-14-getplaceholder",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-15-attribute-data-test",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-16-attribute-data-testid",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-17-attribute-data-qa",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-18-attribute-mixed-case",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-19-id-selector",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-20-class-selector",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-21-tag-attr-selector",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-22-descendant-class",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-23-nth-child",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-24-pseudo-selector",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-25-strict-mode",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-26-strict-mode-3-elements",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-27-tohavetext-fail",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-28-tohaveurl-fail",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-29-tohaveattribute",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-30-tocontaintext",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-31-product-list",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-32-product-card-filter",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-33-detail-product-name",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-34-store-card-click",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-35-back-link",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-36-no-locator-just-message",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-37-empty-message",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-38-undefined-property",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-39-double-quoted",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-40-backtick-quoted",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-41-product-price-toHaveText",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-42-product-aisle-toHaveText",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-43-store-products-list",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-44-stock-status-attr",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-45-product-detail-page",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-46-nav-stores-link",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-47-data-test-bracket-spacing",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-48-locator-chain-first",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-49-locator-chain-nth",
+      "ok": true,
+      "reasons": []
+    },
+    {
+      "id": "err-50-product-name-filter",
+      "ok": true,
+      "reasons": []
+    }
+  ]
+}

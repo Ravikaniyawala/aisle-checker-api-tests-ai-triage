@@ -1,0 +1,129 @@
+{
+  "filesScanned": 84,
+  "productSourcePatterns": {
+    "proposed": {
+      "include": [
+        "app/**",
+        "src/**",
+        "lib/**",
+        "packages/*/src/**",
+        "apps/*/src/**"
+      ],
+      "exclude": [
+        "**/*.spec.*",
+        "**/*.test.*",
+        "**/__tests__/**",
+        "src/test-utils/**",
+        "src/generated/**",
+        "**/generated/**",
+        "**/vendor/**",
+        "**/fixtures/**",
+        "**/page-objects/**",
+        "apps/*/dist/**"
+      ]
+    },
+    "perIncludePatternMatches": {
+      "app/**": 0,
+      "src/**": 0,
+      "lib/**": 0,
+      "packages/*/src/**": 0,
+      "apps/*/src/**": 17
+    },
+    "perExcludePatternMatches": {
+      "**/*.spec.*": 3,
+      "**/*.test.*": 7,
+      "**/__tests__/**": 0,
+      "src/test-utils/**": 0,
+      "src/generated/**": 0,
+      "**/generated/**": 0,
+      "**/vendor/**": 0,
+      "**/fixtures/**": 3,
+      "**/page-objects/**": 0,
+      "apps/*/dist/**": 0
+    },
+    "unionResolved": 17,
+    "sample": [
+      "apps/aisle-api/src/main/java/com/aislechecker/AisleApplication.java",
+      "apps/aisle-api/src/main/java/com/aislechecker/config/CorsConfig.java",
+      "apps/aisle-api/src/main/java/com/aislechecker/controller/AisleController.java",
+      "apps/aisle-api/src/main/java/com/aislechecker/model/AisleLocation.java",
+      "apps/aisle-api/src/main/java/com/aislechecker/model/Product.java",
+      "apps/aisle-api/src/main/java/com/aislechecker/service/AisleService.java",
+      "apps/aisle-ui/src/App.tsx",
+      "apps/aisle-ui/src/api/client.ts",
+      "apps/aisle-ui/src/components/AvailabilityBadge.tsx",
+      "apps/aisle-ui/src/components/NavBar.tsx",
+      "apps/aisle-ui/src/index.css",
+      "apps/aisle-ui/src/main.tsx",
+      "apps/aisle-ui/src/pages/ProductDetailPage.tsx",
+      "apps/aisle-ui/src/pages/ProductsPage.tsx",
+      "apps/aisle-ui/src/pages/StoresPage.tsx",
+      "apps/aisle-ui/src/types.ts",
+      "apps/aisle-ui/src/vite-env.d.ts"
+    ]
+  },
+  "allowedEditPaths": {
+    "proposed": [
+      "tests/**",
+      "e2e/**",
+      "playwright/**",
+      "page-objects/**",
+      "fixtures/**",
+      "test-utils/**",
+      "src/**/__tests__/**",
+      "src/**/*.spec.*",
+      "src/**/*.test.*"
+    ],
+    "perPatternMatches": {
+      "tests/**": 55,
+      "e2e/**": 0,
+      "playwright/**": 0,
+      "page-objects/**": 0,
+      "fixtures/**": 0,
+      "test-utils/**": 0,
+      "src/**/__tests__/**": 0,
+      "src/**/*.spec.*": 0,
+      "src/**/*.test.*": 0
+    },
+    "unionResolved": 55,
+    "sample": [
+      "tests/api/pom.xml",
+      "tests/api/src/test/java/com/aislechecker/api/AisleAvailabilityTest.java",
+      "tests/api/src/test/java/com/aislechecker/api/PriceValidationTest.java",
+      "tests/api/src/test/java/com/aislechecker/api/ProductSearchTest.java",
+      "tests/api/src/test/java/com/aislechecker/api/StoreLocationTest.java",
+      "tests/e2e/.ai/feature-map.yml",
+      "tests/e2e/.ai/page-object-registry.yml",
+      "tests/e2e/.ai/qa-agent-manifest.yml",
+      "tests/e2e/.ai/test-data-catalog.yml",
+      "tests/e2e/.ai/test-inventory.yml",
+      "tests/e2e/oracle-phase0/README.md",
+      "tests/e2e/oracle-phase0/fixtures/drift-cases.ts",
+      "tests/e2e/oracle-phase0/fixtures/playwright-errors.ts",
+      "tests/e2e/oracle-phase0/package-lock.json",
+      "tests/e2e/oracle-phase0/package.json",
+      "tests/e2e/oracle-phase0/reporter/prompt-reporter.ts",
+      "tests/e2e/oracle-phase0/reports/PHASE0_FINDINGS.md",
+      "tests/e2e/oracle-phase0/reports/classifier-eval.json",
+      "tests/e2e/oracle-phase0/reports/defaults-reconciliation.json",
+      "tests/e2e/oracle-phase0/reports/reporter-coverage.json",
+      "tests/e2e/oracle-phase0/reports/topology-validation.json",
+      "tests/e2e/oracle-phase0/scripts/eval-classifier.ts",
+      "tests/e2e/oracle-phase0/scripts/phase0-report.ts",
+      "tests/e2e/oracle-phase0/scripts/reconcile-defaults.ts",
+      "tests/e2e/oracle-phase0/scripts/validate-topology.ts"
+    ]
+  },
+  "productShapedNotCovered": [],
+  "testShapedNotCovered": [],
+  "recommendations": [
+    "PRODUCT_SOURCE_PATTERNS resolves to 17 files",
+    "allowedEditPaths resolves to 55 files",
+    "aisle-checker uses apps/aisle-api/ for Java API — defaults include apps/*/src/** which covers Java sources too",
+    "aisle-checker UI lives at apps/aisle-ui/src/** — covered by apps/*/src/** include",
+    "aisle-checker has Java API tests at tests/api/ — already covered by tests/** allowedEditPaths",
+    "aisle-checker page objects live at tests/e2e/src/pages/ — covered by tests/** but NOT by page-objects/**; consider replacing page-objects/** with tests/**/pages/** OR keeping both",
+    "aisle-checker fixtures live at tests/e2e/src/fixtures/ — covered by tests/** but NOT by fixtures/**; same note as page objects",
+    "aisle-checker uses `testIdAttribute: data-test` in playwright.config.ts — ensure data-test is in DEFAULT_TEST_ATTRIBUTES for the locator-drift classifier (already present in Phase 0 defaults)"
+  ]
+}

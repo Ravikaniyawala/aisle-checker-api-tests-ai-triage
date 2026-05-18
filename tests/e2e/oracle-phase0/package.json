@@ -1,0 +1,23 @@
+{
+  "name": "aisle-checker-oracle-phase0",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "Phase 0 validation tooling for ai-oracle-triage autofix detector",
+  "scripts": {
+    "test": "node --import tsx --test --test-reporter=spec tests/locator-parser.test.ts tests/path-normalizer.test.ts tests/provenance-checker.test.ts tests/locator-drift-classifier.test.ts tests/prompt-reporter.test.ts tests/topology-validator.test.ts tests/reporter-coverage.test.ts",
+    "typecheck": "tsc --noEmit",
+    "validate:topology": "tsx scripts/validate-topology.ts",
+    "eval:classifier": "tsx scripts/eval-classifier.ts",
+    "reconcile:defaults": "tsx scripts/reconcile-defaults.ts",
+    "phase0:report": "tsx scripts/phase0-report.ts"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@types/node": "^22.15.3",
+    "@types/picomatch": "^4.0.3",
+    "picomatch": "^4.0.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.8.3"
+  }
+}
