@@ -64,7 +64,15 @@ test.describe('Stores page', () => {
     await productsPage.goto()
     await productsPage.expectLoaded()
     await productsPage.navStores.click()
-    await expect(page.getByTestId('stores-page')).toBeVisible()
+    // EXPERIMENT PATTERN #3: strict-mode violation. `page.locator('div')`
+    // matches many elements; calling `.toBeVisible()` on a strict-mode
+    // locator that resolved to >1 element fails with:
+    //   "strict mode violation: locator('div') resolved to N elements"
+    // The autofix detector's classifier has a dedicated repairability
+    // kind for this: `strict_mode_selector_ambiguity`, which is
+    // AUTO-eligible. Triage classification is the wildcard — could go
+    // FLAKY or NEW_BUG depending on Oracle's instinct context.
+    await expect(page.locator('div')).toBeVisible()
   })
 
 })

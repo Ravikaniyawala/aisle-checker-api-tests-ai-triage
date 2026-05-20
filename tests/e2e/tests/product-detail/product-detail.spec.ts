@@ -20,7 +20,15 @@ test.describe('Product detail page', () => {
     await productDetailPage.goto(inStockProduct.id)
     await productDetailPage.expectLoaded()
     await productDetailPage.expectAvailabilityStatus('in_stock')
-    await expect(productDetailPage.availabilityBadge).toHaveText('In Stock')
+    // EXPERIMENT PATTERN #4: text mismatch (value-mismatch family).
+    // Locator works fine, but the expected text is wrong — produces
+    //   "Expected string: 'Available'  Received string: 'In Stock'"
+    // Should be classified as REGRESSION (the test is asserting the
+    // wrong thing about correct app behavior). The autofix policy's
+    // Gate 4 hard-guard `value_mismatch` should fire even before
+    // category checks, blocking any attempt to "fix" by changing
+    // the asserted value.
+    await expect(productDetailPage.availabilityBadge).toHaveText('Available')
   })
 
   test(`${testTags.REGRESSION} ${testTags.PRODUCT_DETAIL} DETAIL-003: detail page shows availability from API for out-of-stock product`, async ({

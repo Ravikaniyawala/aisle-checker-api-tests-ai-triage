@@ -14,7 +14,13 @@ test.describe('Products page', () => {
   }) => {
     await productsPage.goto()
     await productsPage.expectLoaded()
-    await productsPage.expectProductCount(products.length)
+    // EXPERIMENT PATTERN #5: count mismatch (value-mismatch family,
+    // distinct shape from text mismatch). Asserts a wildly wrong
+    // expected count so the failure renders as
+    //   Expected: <large>  Received: <actual>
+    // Should trigger Oracle's value_mismatch HARD GUARD downstream
+    // and be classified as REGRESSION.
+    await productsPage.expectProductCount(products.length + 99)
   })
 
   test(`${testTags.REGRESSION} ${testTags.PRODUCTS} PROD-002: each product card shows name, price, aisle, and availability badge`, async ({
@@ -64,7 +70,14 @@ test.describe('Products page', () => {
     await productsPage.expectLoaded()
     await productsPage.expectCardShowsAvailability(lowStockProduct.name, 'low_stock')
     const card = await productsPage.getCardByName(lowStockProduct.name)
-    await expect(card.getByTestId('availability-badge')).toHaveText('Low Stock')
+    // EXPERIMENT PATTERN #2: engineered timeout (1ms). Locator exists,
+    // text matches, but the assertion's polling window is too short to
+    // actually verify. Produces the classic "TimeoutError: locator
+    // expected to be visible" shape that flaky timing patterns share.
+    // Goal: see whether Oracle's triage classifies a tight-timeout
+    // failure as FLAKY (the only category that survives Gate 1 to
+    // reach the autofix routing matrix).
+    await expect(card.getByTestId('availability-badge')).toHaveText('Low Stock', { timeout: 1 })
   })
 
   test(`${testTags.REGRESSION} ${testTags.PRODUCTS} PROD-006: clicking a product card navigates to product detail`, async ({
