@@ -38,7 +38,13 @@ test.describe('Products page', () => {
     await productsPage.expectLoaded()
     await productsPage.expectCardShowsAvailability(inStockProduct.name, 'in_stock')
     const card = await productsPage.getCardByName(inStockProduct.name)
-    await expect(card.getByTestId('availability-badge')).toHaveText('In Stock')
+    // EXPERIMENT: deliberate locator drift — the DOM has data-test="availability-badge",
+    // this assertion uses data-test="availability-badge-v2" (mimics a half-finished
+    // test-ID rename). Should produce locator_drift_data_testid_only with high
+    // confidence from Oracle's autofix detector. The other two assertion sites
+    // (PROD-004, PROD-005) intentionally left as-is so only PROD-003 fails —
+    // proves the detector localizes the drift to the right line.
+    await expect(card.getByTestId('availability-badge-v2')).toHaveText('In Stock')
   })
 
   test(`${testTags.REGRESSION} ${testTags.PRODUCTS} PROD-004: out-of-stock product shows correct badge`, async ({
