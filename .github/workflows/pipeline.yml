@@ -148,10 +148,18 @@ jobs:
 
       - name: Run Playwright tests
         working-directory: tests/e2e
+        # ORACLE_PHASE0=1 enables the failure-context reporter
+        # configured in tests/e2e/playwright.config.ts. On any
+        # failure it emits ARIA snapshots + prompt files to
+        # tests/e2e/test-results/failure-context/<id>/, which Oracle's
+        # autofix detector consumes to classify locator drift. Without
+        # this flag, no ARIA evidence is produced and the autofix
+        # policy holds/rejects every entry at the source-unknown gate.
         run: npm test || true
         env:
-          BASE_URL: http://localhost:4173
-          CI: true
+          BASE_URL:      http://localhost:4173
+          CI:            true
+          ORACLE_PHASE0: '1'
 
       - name: Upload Playwright report
         if: always()
@@ -161,15 +169,77 @@ jobs:
           path: tests/e2e/playwright-report/
           retention-days: 7
 
-      - name: Upload Playwright results
+      # ── Oracle input artifact ───────────────────────────────────────────
+      # The Oracle reusable workflow downloads ONE artifact (by name)
+      # into `downloaded-results/`. Stage two things into a single
+      # known-layout directory, then upload it:
+      #
+      #   1. Playwright JUnit XML at the artifact ROOT
+      #      (Oracle's report parser scans only the top level — see
+      #      src/report-parser.ts; it won't recurse into subdirs.
+      #      Flatten any name conflicts by giving the file a stable
+      #      `playwright-results.xml` name in case multiple XMLs are
+      #      ever produced.)
+      #
+      #   2. Phase 0 failure-context under `test-results/failure-context/`
+      #      (matches Oracle's ORACLE_FAILURE_CONTEXT_PATH wiring in
+      #      the reusable workflow).
+      #
+      # Post-download layout in oracle-triage:
+      #   downloaded-results/playwright-results.xml
+      #   downloaded-results/test-results/failure-context/<id>/data.json
+      #   downloaded-results/test-results/failure-context/<id>/prompt.md
+      - name: Stage Oracle input layout
+        if: always()
+        run: |
+          mkdir -p oracle-input/test-results/failure-context
+          # Copy the Playwright JUnit XML to the artifact root. Use
+          # a stable name so the parser doesn't care whether
+          # Playwright writes a single file or many.
+          if [ -f tests/e2e/playwright-results/results.xml ]; then
+            cp tests/e2e/playwright-results/results.xml oracle-input/playwright-results.xml
+          fi
+          # Copy the Phase 0 failure-context tree if present.
+          # `cp -r src/. dest/` copies CONTENTS so the artifact root
+          # matches Oracle's expected layout. `|| true` keeps the
+          # step green when the source dir is absent (e.g. zero
+          # Playwright failures → reporter never wrote anything).
+          cp -r tests/e2e/test-results/failure-context/. oracle-input/test-results/failure-context/ 2>/dev/null || true
+          echo "Staged Oracle input:"
+          find oracle-input -maxdepth 3 -type f | head -20
+
+      - name: Upload Oracle input artifact (Playwright results + failure context)
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-results
-          path: tests/e2e/playwright-results/
+          name: oracle-playwright-input
+          # Trailing slash means upload the CONTENTS of oracle-input/,
+          # so the artifact root contains playwright-results/ and
+          # test-results/ directly.
+          path: oracle-input/
           retention-days: 7
+          if-no-files-found: warn
 
   # Stage 3: AI Oracle Triage
+  #
+  # Triages the Playwright suite (NOT the JUnit API tests). Reasons:
+  #
+  #   1. Autofix=auto only produces approvals when the locator-drift
+  #      classifier has ARIA snapshot evidence. The Phase 0 reporter
+  #      writes that evidence for Playwright; JUnit REST-Assured
+  #      tests don't have an ARIA layer.
+  #   2. Both suites emit JUnit XML, so Oracle's parser handles
+  #      either format identically — the report-format input below
+  #      is unchanged.
+  #
+  # Topology: aisle-checker is monorepo_e2e (default). The Phase 4+
+  # cross-repo deploy-correlation relaxation only applies to
+  # split_e2e topologies — not relevant here. The normal
+  # `topologyAllowsAuto=true` gate covers monorepo+full.
+  #
+  # Allowlist: ${{ github.repository_id }} is the numeric repo ID.
+  # The reusable workflow sets ORACLE_REPO_ID to the same value, so
+  # the allowlist's strict equality match succeeds.
   oracle-triage:
     name: AI Oracle Triage
     needs: [api-tests, e2e-tests]
@@ -179,10 +249,13 @@ jobs:
       contents: read
     uses: Ravikaniyawala/ai-oracle-test-failure-triage/.github/workflows/oracle-triage.yml@main
     with:
-      report-path: test-results
-      report-artifact-name: test-results
+      report-path: playwright-results
+      report-artifact-name: oracle-playwright-input
       report-format: JUNIT_XML
       pipeline-id: ${{ github.run_id }}
+      # ── Phase 1+ autofix ────────────────────────────────────────────
+      autofix-mode: auto
+      autofix-auto-approved-repos: ${{ github.repository_id }}
     secrets:
       anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
       atlassian-token: ${{ secrets.ATLASSIAN_TOKEN }}
