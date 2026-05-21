@@ -9,6 +9,50 @@ import {
 
 test.describe('Products page', () => {
 
+  // EXPERIMENT — token-overlapping testid drift for classifier exercise.
+  //
+  // Builds on the prior flake-shaped-failure experiment (PR/run 26206468080)
+  // which proved the TimeoutError shape produces a FLAKY classification.
+  // That run held with `repairability_insufficient` because the failing
+  // testid `availability-badge-loading-spinner` shared no name tokens with
+  // any ARIA element (`findCandidate()` is intentionally conservative —
+  // see Codex P0 #1 guard in autofix-detector/locator-drift-classifier.ts).
+  //
+  // This experiment uses `in-stock-badge` which shares the "stock" token
+  // with the existing element `span "In Stock" [data-test=availability-badge]`.
+  // The classifier's tokensOverlap() helper will fire on the shared "stock"
+  // token (tokens of length ≥3, "-" treated as separator).
+  //
+  // Local simulation against the prior run's ARIA snapshot:
+  //   drift.kind:       'locator_drift_data_testid_only'  ← AUTO-eligible
+  //   drift.confidence: 0.90                              ← clears Gate 15
+  //   candidate.name:   "...In Stock..."                  ← token-overlap winner
+  //
+  // Expected queue entry shape (topology=partial still demotes auto→propose):
+  //   {
+  //     "category":        "FLAKY",
+  //     "decision":        "held",
+  //     "decisionReason":  "mode_propose",     ← Gate 18 (not Gate 13 this time)
+  //     "driftKind":       "locator_drift_data_testid_only",
+  //     "driftConfidence": 0.90,
+  //     "effectiveMode":   "propose"
+  //   }
+  //
+  // That's the maximum aisle-checker can produce today. To go beyond `held`
+  // to `approved` we'd need topology to upgrade from partial to full — that
+  // requires the topology validator to see ≥1 historical PR file path
+  // overlapping product source patterns (apps/*/src/**), which builds up
+  // organically as PRs land.
+  test(`${testTags.SMOKE} ${testTags.PRODUCTS} FLAKE-D: token-overlapping testid drift`, async ({ page }) => {
+    await page.goto('/')
+    // Failing testid value "in-stock-badge" — DOM has "availability-badge"
+    // with name "In Stock". Shared token "stock" triggers the classifier's
+    // tokensOverlap match. Tight timeout keeps the error message in the
+    // "TimeoutError waiting for..." family so Oracle classifies FLAKY.
+    await expect(page.getByTestId('in-stock-badge'))
+      .toBeVisible({ timeout: 500 })
+  })
+
   test(`${testTags.SMOKE} ${testTags.PRODUCTS} PROD-001: products page loads and displays all products`, async ({
     productsPage,
   }) => {
