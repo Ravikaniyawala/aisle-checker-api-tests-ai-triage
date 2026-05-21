@@ -21,7 +21,7 @@ commands:
   typecheck: "npm run typecheck"
   lint_anti_patterns: "npm run lint:anti-patterns"
   validate_test_inventory: "npm run validate:inventory"
-  playwright_cli: "npm run pwcli"
+  prepare_ci_agent_handoff: "npm run agent:ci:prepare"
 
 folder_structure:
   tests: "Feature-based Playwright specs under tests/e2e/tests/<feature>/."

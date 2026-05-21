@@ -65,6 +65,9 @@ async page => {
   // Perform action
   await page.getByRole('textbox', { name: 'What needs to be done?' }).pressSequentially('Walk the dog', { delay: 60 });
   await page.getByRole('textbox', { name: 'What needs to be done?' }).press('Enter');
+  // NOTE: waitForTimeout is used here for video pacing only — this is a
+  // run-code screencast script, NOT a Playwright test. Never use
+  // waitForTimeout inside tests/ or src/pages/ (AP-001).
   await page.waitForTimeout(1000);
 
   // Show next chapter
@@ -86,6 +89,7 @@ async page => {
   // Perform more actions while the annotation is visible
   await page.getByRole('textbox', { name: 'What needs to be done?' }).pressSequentially('Buy groceries', { delay: 60 });
   await page.getByRole('textbox', { name: 'What needs to be done?' }).press('Enter');
+  // NOTE: waitForTimeout for video pacing only — not permitted in tests/ or src/pages/.
   await page.waitForTimeout(1500);
 
   // Remove the annotation when done

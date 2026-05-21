@@ -10,7 +10,6 @@ features:
     test_data:
       - "tests/e2e/src/test-data/products.ts"
     existing_tests:
-      - "FLAKE-D"
       - "PROD-001"
       - "PROD-002"
       - "PROD-003"

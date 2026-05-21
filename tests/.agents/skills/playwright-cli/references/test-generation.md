@@ -35,18 +35,23 @@ playwright-cli click e3
 
 Collect the generated code into a Playwright test:
 
+> **Repo rule:** In this repo, always import from `../../src/fixtures/base` instead of
+> `@playwright/test` directly. The base fixture injects page objects and the Oracle
+> Phase 0 reporter hook. The example below shows the generic Playwright pattern for
+> reference; adapt it to the repo import before committing.
+
 ```typescript
-import { test, expect } from '@playwright/test';
+// Generic Playwright pattern (external reference only):
+// import { test, expect } from '@playwright/test';
 
-test('login flow', async ({ page }) => {
-  // Generated code from playwright-cli session:
-  await page.goto('https://example.com/login');
-  await page.getByRole('textbox', { name: 'Email' }).fill('user@example.com');
-  await page.getByRole('textbox', { name: 'Password' }).fill('password123');
-  await page.getByRole('button', { name: 'Sign In' }).click();
+// ✅ Correct import for this repo:
+import { test, expect } from '../../src/fixtures/base';
+import { testTags } from '../../src/helpers/testTags';
 
-  // Add assertions
-  await expect(page).toHaveURL(/.*dashboard/);
+test(`${testTags.SMOKE} ${testTags.PRODUCTS} PROD-XXX: products page loads`, async ({ productsPage }) => {
+  // Use page objects, not raw page.goto() in specs:
+  await productsPage.goto();
+  await productsPage.expectLoaded();
 });
 ```
 

@@ -55,8 +55,16 @@ Create or update Playwright TypeScript tests using the aisle-checker e2e framewo
 await expect(productDetailPage.availabilityBadge).toHaveAttribute('data-status', 'in_stock')
 
 // For store product exclusion: count + named negative (AP-006)
-await storesPage.expectStoreProductCount(4)
-await storesPage.expectStoreProductNotVisible('Organic Pasta 500g')
+// Derive excluded names from typed test data — never hardcode product name strings
+import { northStoreProducts, southStoreProducts } from '../../src/test-data/products'
+
+const southOnlyProducts = southStoreProducts.filter(
+  p => !northStoreProducts.some(n => n.id === p.id)
+)
+await storesPage.expectStoreProductCount(northStoreProducts.length)
+for (const p of southOnlyProducts) {
+  await storesPage.expectStoreProductNotVisible(p.name)
+}
 
 // Navigate to a product detail page using the typed constant
 await productDetailPage.goto(inStockProduct.id)
@@ -111,6 +119,8 @@ If any item is `FAIL`, self-revert that change before declaring success.
 Requirement: "South Store does not show North-only products."
 
 ```ts
+import { northStoreProducts, southStoreProducts } from '../../src/test-data/products'
+
 test(`${testTags.REGRESSION} ${testTags.STORES} STORE-XXX: South Store does not contain North-only products`, async ({
   storesPage,
 }) => {
@@ -123,9 +133,14 @@ test(`${testTags.REGRESSION} ${testTags.STORES} STORE-XXX: South Store does not 
   for (const product of southStoreProducts) {
     await storesPage.expectStoreProductVisible(product.name)
   }
-  // AP-006: named negative — products 2 and 3 are North-only
-  await storesPage.expectStoreProductNotVisible('Sourdough Bread')
-  await storesPage.expectStoreProductNotVisible('Free Range Eggs 12pk')
+  // AP-006: named negative — derive North-only products from typed test data
+  // Never hardcode product name strings
+  const northOnlyProducts = northStoreProducts.filter(
+    p => !southStoreProducts.some(s => s.id === p.id)
+  )
+  for (const p of northOnlyProducts) {
+    await storesPage.expectStoreProductNotVisible(p.name)
+  }
   await storesPage.expectStoreProductCount(southStoreProducts.length)
 })
 ```

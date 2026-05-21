@@ -3,16 +3,9 @@ name: Playwright E2E CI
 on:
   pull_request:
     paths:
-      - "tests/e2e/.ai/**"
-      - "tests/e2e/.github/workflows/**"
-      - "tests/e2e/oracle-phase0/**"
-      - "tests/e2e/package-lock.json"
-      - "tests/e2e/package.json"
-      - "tests/e2e/playwright.config.ts"
-      - "tests/e2e/scripts/**"
-      - "tests/e2e/src/**"
-      - "tests/e2e/tests/**"
-      - "tests/e2e/tsconfig.json"
+      - "tests/e2e/**"
+      - "tests/.ai/**"
+      - "tests/.github/**"
       - "apps/aisle-ui/**"
       - "apps/aisle-api/src/**"
   push:
@@ -20,16 +13,9 @@ on:
       - main
       - master
     paths:
-      - "tests/e2e/.ai/**"
-      - "tests/e2e/.github/workflows/**"
-      - "tests/e2e/oracle-phase0/**"
-      - "tests/e2e/package-lock.json"
-      - "tests/e2e/package.json"
-      - "tests/e2e/playwright.config.ts"
-      - "tests/e2e/scripts/**"
-      - "tests/e2e/src/**"
-      - "tests/e2e/tests/**"
-      - "tests/e2e/tsconfig.json"
+      - "tests/e2e/**"
+      - "tests/.ai/**"
+      - "tests/.github/**"
       - "apps/aisle-ui/**"
       - "apps/aisle-api/src/**"
 

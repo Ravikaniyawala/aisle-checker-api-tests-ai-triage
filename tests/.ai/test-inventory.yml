@@ -1,13 +1,5 @@
 tests:
   # ── Products page ─────────────────────────────────────────────────────────
-  - id: "FLAKE-D"
-    title: "FLAKE-D: token-overlapping testid drift"
-    file: "tests/e2e/tests/products/products.spec.ts"
-    feature_area: "products"
-    coverage: "Classifier experiment — uses a non-existent testid (in-stock-badge) that shares the 'stock' token with the real element (availability-badge). Expected Oracle classification: FLAKY."
-    tags: ["@smoke", "@products"]
-    note: "Intentional failing test for Oracle triage classifier exercise. Do not fix."
-
   - id: "PROD-001"
     title: "products page loads and displays all products"
     file: "tests/e2e/tests/products/products.spec.ts"
