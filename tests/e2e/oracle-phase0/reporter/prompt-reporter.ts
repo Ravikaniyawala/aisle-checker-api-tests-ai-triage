@@ -128,15 +128,63 @@ export default class PromptReporter implements Reporter {
     if (failingLocator) artifact.failingLocator = failingLocator;
     if (testCodeSnippet) artifact.testCodeSnippet = testCodeSnippet;
 
-    // ARIA snapshot extraction would happen here, reading the trace's
-    // accessibility tree. The trace.zip is at result.attachments where
-    // attachment.name === 'trace'. For Phase 0, the eval suite uses
-    // fixture ARIA snapshots directly; the live extraction is intentionally
-    // left as a Phase 1 task because it requires the @playwright/trace-viewer
-    // internals which aren't a stable public API.
+    // ARIA snapshot: read the `aria-snapshot.yaml` attachment emitted
+    // by the test fixture in `tests/e2e/src/fixtures/base.ts`. The
+    // fixture runs in `afterEach` while `page` is still live and walks
+    // the DOM to produce a Playwright-style ARIA YAML enriched with
+    // [data-test=...] bracket annotations.
+    //
+    // Oracle's `autofix-aria-loader.ts#parseAriaSnapshot()` already
+    // understands this format — `data-*` keys inside the [] block
+    // become `AriaSnapshotElement.testAttributes`. That's what the
+    // locator-drift classifier needs to produce
+    // `locator_drift_data_testid_only` with high confidence.
+    //
+    // Prior to this wiring (PR-ARIA-CAPTURE) the reporter deliberately
+    // skipped ARIA capture, citing trace-viewer internals being
+    // unstable; since Playwright 1.59 `page.ariaSnapshot()` is a
+    // stable public API and the DOM-walk approach below is even
+    // simpler.
+    const ariaYaml = extractAriaSnapshotAttachment(result);
+    if (ariaYaml) artifact.ariaSnapshot = ariaYaml;
 
     return artifact;
   }
+}
+
+/**
+ * Read the `aria-snapshot.yaml` attachment emitted by the test fixture.
+ * Handles both shapes Playwright uses for attachments:
+ *
+ *   - `att.body` is a Buffer (small attachments inlined into the
+ *     report)
+ *   - `att.path` points at a file on disk (larger attachments,
+ *     screenshots, etc.)
+ *
+ * Returns undefined when:
+ *   - no attachment with the expected name is present (e.g. fixture
+ *     short-circuited because the test passed, or page was closed
+ *     before capture)
+ *   - the body/file is unreadable or empty
+ *
+ * Exported for unit testing.
+ */
+export function extractAriaSnapshotAttachment(result: TestResult): string | undefined {
+  for (const att of result.attachments ?? []) {
+    if (att.name !== 'aria-snapshot.yaml') continue;
+    let body: string | undefined;
+    if (att.body) {
+      body = att.body.toString('utf8');
+    } else if (att.path && existsSync(att.path)) {
+      try {
+        body = readFileSync(att.path, 'utf8');
+      } catch {
+        return undefined;
+      }
+    }
+    if (body && body.length > 0) return body;
+  }
+  return undefined;
 }
 
 // ── Pure helpers (exported for tests) ───────────────────────────────────
