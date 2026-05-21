@@ -1,0 +1,57 @@
+features:
+  products:
+    test_folder: "tests/e2e/tests/products"
+    spec_files:
+      - "tests/e2e/tests/products/products.spec.ts"
+    page_objects:
+      - "tests/e2e/src/pages/ProductsPage.ts"
+    helper_files:
+      - "tests/e2e/src/helpers/testTags.ts"
+    test_data:
+      - "tests/e2e/src/test-data/products.ts"
+    existing_tests:
+      - "FLAKE-D"
+      - "PROD-001"
+      - "PROD-002"
+      - "PROD-003"
+      - "PROD-004"
+      - "PROD-005"
+      - "PROD-006"
+    description: "Product catalogue listing page. Shows all products with name, price, aisle, and availability badge. Supports click-through to product detail."
+
+  product-detail:
+    test_folder: "tests/e2e/tests/product-detail"
+    spec_files:
+      - "tests/e2e/tests/product-detail/product-detail.spec.ts"
+    page_objects:
+      - "tests/e2e/src/pages/ProductDetailPage.ts"
+    helper_files:
+      - "tests/e2e/src/helpers/testTags.ts"
+    test_data:
+      - "tests/e2e/src/test-data/products.ts"
+    existing_tests:
+      - "DETAIL-001"
+      - "DETAIL-002"
+      - "DETAIL-003"
+      - "DETAIL-004"
+      - "DETAIL-005"
+    description: "Product detail page at /#/products/:id. Fetches product info and availability from the API. Shows name, price, aisle, availability badge, and a back-link to the products page."
+
+  stores:
+    test_folder: "tests/e2e/tests/stores"
+    spec_files:
+      - "tests/e2e/tests/stores/stores.spec.ts"
+    page_objects:
+      - "tests/e2e/src/pages/StoresPage.ts"
+      - "tests/e2e/src/pages/ProductsPage.ts"
+    helper_files:
+      - "tests/e2e/src/helpers/testTags.ts"
+    test_data:
+      - "tests/e2e/src/test-data/products.ts"
+    existing_tests:
+      - "STORE-001"
+      - "STORE-002"
+      - "STORE-003"
+      - "STORE-004"
+      - "STORE-005"
+    description: "Stores page at /#/stores. Lists store locations (North Store, South Store). Clicking a store card reveals the products stocked at that location."

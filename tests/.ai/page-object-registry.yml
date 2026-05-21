@@ -1,0 +1,88 @@
+shared_types:
+  - name: "ProductTestData"
+    path: "tests/e2e/src/test-data/products.ts"
+    responsibility: "Typed product shape (id, name, price, aisle, availability) shared across all feature specs."
+    when_to_update:
+      - "The API product contract adds or removes fields."
+    when_not_to_update:
+      - "A page needs a locator or action change."
+      - "A test needs an additional named alias (add it as a const export instead)."
+
+page_objects:
+  - name: "ProductsPage"
+    path: "tests/e2e/src/pages/ProductsPage.ts"
+    responsibility: "Navigate to the products list page, assert it is loaded, and interact with product cards."
+    key_locators:
+      - "productList — getByTestId('product-list')"
+      - "productCards — getByTestId('product-card')"
+      - "navProducts — getByTestId('nav-products')"
+      - "navStores — getByTestId('nav-stores')"
+    key_methods:
+      - "goto()"
+      - "expectLoaded()"
+      - "expectProductCount(count)"
+      - "expectProductVisible(name)"
+      - "clickProduct(name)"
+      - "getCardByName(name): Promise<Locator>"
+      - "expectCardShowsPrice(productName, price)"
+      - "expectCardShowsAisle(productName, aisle)"
+      - "expectCardShowsAvailability(productName, status)"
+    when_to_update:
+      - "Products page locators change."
+      - "A reusable product-list action is needed."
+    when_not_to_update:
+      - "The test can compose existing getCardByName + direct expect calls."
+      - "The behavior belongs to the product detail or stores page."
+
+  - name: "ProductDetailPage"
+    path: "tests/e2e/src/pages/ProductDetailPage.ts"
+    responsibility: "Navigate directly to a product detail page by numeric ID, assert it is loaded, and read product fields and availability."
+    key_locators:
+      - "container — getByTestId('product-detail-page')"
+      - "productName — getByTestId('detail-product-name')"
+      - "productPrice — getByTestId('detail-product-price')"
+      - "productAisle — getByTestId('detail-product-aisle')"
+      - "availabilityBadge — getByTestId('availability-badge')"
+      - "backLink — getByTestId('back-link')"
+    key_methods:
+      - "goto(productId: number)"
+      - "expectLoaded()"
+      - "expectProductName(name)"
+      - "expectProductPrice(price)"
+      - "expectProductAisle(aisle)"
+      - "expectAvailabilityStatus(status)"
+      - "goBackToProducts()"
+    notes:
+      - "goto() navigates to /#/products/{productId} via HashRouter."
+      - "Availability is asserted via data-status attribute, not badge text."
+    when_to_update:
+      - "Product detail page locators change."
+      - "A reusable detail page assertion is needed."
+    when_not_to_update:
+      - "The behavior belongs to the products list or stores page."
+
+  - name: "StoresPage"
+    path: "tests/e2e/src/pages/StoresPage.ts"
+    responsibility: "Navigate to the stores page, assert it is loaded, select a store, and assert its product list."
+    key_locators:
+      - "container — getByTestId('stores-page')"
+      - "storeList — getByTestId('store-list')"
+      - "storeCards — getByTestId('store-card')"
+    key_methods:
+      - "goto()"
+      - "expectLoaded()"
+      - "expectStoreCount(count)"
+      - "expectStoreVisible(name)"
+      - "selectStore(name)"
+      - "expectStoreProductsVisible()"
+      - "expectStoreProductCount(count)"
+      - "expectStoreProductVisible(productName)"
+      - "expectStoreProductNotVisible(productName)"
+    notes:
+      - "goto() navigates to /#/stores."
+      - "expectStoreProductNotVisible() uses toHaveCount(0) — required for AP-006 negative assertions."
+    when_to_update:
+      - "Stores page locators change."
+      - "A reusable store action or assertion is needed."
+    when_not_to_update:
+      - "The behavior belongs to the products list or product detail page."

@@ -1,0 +1,173 @@
+name: Agentic QA Sequence
+
+on:
+  workflow_dispatch:
+    inputs:
+      feature_request:
+        description: "Feature or acceptance criteria to turn into Playwright tests."
+        required: true
+        default: "Create tests for verifying availability badges on the aisle-checker products page for all three availability states."
+      create_pr:
+        description: "Open a draft PR if the writer produces source changes."
+        required: true
+        type: boolean
+        default: true
+      pr_title:
+        description: "Draft PR title for generated test changes."
+        required: true
+        default: "Add agent-generated Playwright tests"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  prepare-agent-handoff:
+    name: Generate, validate, and publish test changes
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.AGENT_PR_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Build and start API
+        working-directory: apps/aisle-api
+        run: |
+          mvn -q package -DskipTests
+          java -jar target/*.jar &
+          echo "Waiting for API..."
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:8080/api/products > /dev/null && echo "API ready" && break
+            sleep 2
+          done
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build React UI
+        working-directory: apps/aisle-ui
+        run: |
+          npm ci
+          VITE_API_BASE_URL=http://localhost:8080 npm run build
+
+      - name: Serve UI via vite preview
+        working-directory: apps/aisle-ui
+        run: |
+          npx vite preview --port 4173 &
+          echo "Waiting for UI..."
+          for i in $(seq 1 20); do
+            curl -sf http://localhost:4173 > /dev/null && echo "UI ready" && break
+            sleep 2
+          done
+
+      - name: Install E2E dependencies
+        working-directory: tests/e2e
+        run: npm ci
+
+      - name: Install Chromium
+        working-directory: tests/e2e
+        run: npx playwright install chromium
+
+      - name: Prepare planner and writer requests
+        working-directory: tests/e2e
+        env:
+          PLANNER_REQUEST: |
+            Use the QA Test Planner agent to create a test plan for this feature request:
+
+            ${{ inputs.feature_request }}
+          WRITER_REQUEST: |
+            Use the Playwright Test Writer agent to implement framework-style tests from the planner artifact for this feature request:
+
+            ${{ inputs.feature_request }}
+          PLAN_ARTIFACT_PATH: agent-artifacts/plans/test-plan.md
+          WRITER_SUMMARY_PATH: agent-artifacts/writer/change-summary.md
+        run: npm run agent:ci:prepare
+
+      - name: Agent runner integration point
+        run: |
+          echo "Wire your chosen CI agent runner here before relying on this workflow to produce changes."
+          echo "Planner input: tests/e2e/agent-artifacts/requests/planner-request.md"
+          echo "Planner output: tests/e2e/agent-artifacts/plans/test-plan.md"
+          echo "Writer input: tests/e2e/agent-artifacts/requests/writer-request.md plus planner output"
+          echo "Writer output: framework code changes plus tests/e2e/agent-artifacts/writer/change-summary.md"
+          echo "The writer may use Playwright CLI only for headless, non-interactive inspection; CI must not run codegen or headed browser workflows."
+
+      - name: Typecheck current framework
+        working-directory: tests/e2e
+        run: npm run typecheck
+
+      - name: Run Playwright suite
+        working-directory: tests/e2e
+        env:
+          BASE_URL: http://localhost:4173
+        run: npm test
+
+      - name: Detect writer changes
+        id: changes
+        run: |
+          if [ -n "$(git status --porcelain --untracked-files=normal -- . ':(exclude)tests/e2e/agent-artifacts')" ]; then
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
+            git status --short -- . ':(exclude)tests/e2e/agent-artifacts'
+          else
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+            echo "No source changes were produced by the writer."
+          fi
+
+      - name: Open draft PR for generated tests
+        if: ${{ inputs.create_pr && steps.changes.outputs.has_changes == 'true' }}
+        env:
+          BASE_BRANCH: ${{ github.ref_name }}
+          BRANCH_NAME: agentic-tests/${{ github.run_id }}
+          FEATURE_REQUEST: ${{ inputs.feature_request }}
+          GH_TOKEN: ${{ secrets.AGENT_PR_TOKEN || secrets.GITHUB_TOKEN }}
+          PR_TITLE: ${{ inputs.pr_title }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$BRANCH_NAME"
+          git add -- . ':(exclude)tests/e2e/agent-artifacts'
+          git commit -m "$PR_TITLE"
+          git push --set-upstream origin "$BRANCH_NAME"
+
+          {
+            echo "## Agentic QA change"
+            echo
+            echo "Feature request:"
+            echo
+            echo "$FEATURE_REQUEST"
+            echo
+            echo "This draft PR was created by the Agentic QA Sequence workflow after generated test changes passed validation."
+            echo
+            echo "Validation run: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          } > /tmp/agentic-qa-pr-body.md
+
+          gh pr create \
+            --draft \
+            --base "$BASE_BRANCH" \
+            --head "$BRANCH_NAME" \
+            --title "$PR_TITLE" \
+            --body-file /tmp/agentic-qa-pr-body.md
+
+      - name: Upload agent handoff artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent-handoff
+          path: tests/e2e/agent-artifacts
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: tests/e2e/playwright-report
+          if-no-files-found: ignore
