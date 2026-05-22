@@ -9,6 +9,24 @@ import {
 
 test.describe('Products page', () => {
 
+  // VERIFICATION ONLY — do NOT merge. Fresh branch off main with no
+  // prior cache history, so the Oracle state cache restore falls
+  // back to main's parent-branch caches and picks up the
+  // pr_context row from PR #12's merge run (which carries
+  // apps/aisle-ui/src/App.tsx via the new gh-api push-context
+  // fallback from Oracle PR #52). With that history loaded,
+  // `appChangeVisibilityProven` flips true and topology becomes
+  // 'full'. Expected queue entry:
+  //   topology=monorepo_e2e/full allowsAuto=true
+  //   decision=approved
+  //   driftKind=locator_drift_data_testid_only
+  //   driftConfidence=0.90
+  test(`${testTags.SMOKE} ${testTags.PRODUCTS} VERIFY-TOPOLOGY-V2: flake-shaped`, async ({ page }) => {
+    await page.goto('/')
+    await expect(page.getByTestId('in-stock-badge'))
+      .toBeVisible({ timeout: 500 })
+  })
+
   test(`${testTags.SMOKE} ${testTags.PRODUCTS} PROD-001: products page loads and displays all products`, async ({
     productsPage,
   }) => {
