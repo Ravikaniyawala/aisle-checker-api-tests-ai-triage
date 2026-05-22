@@ -1,3 +1,4 @@
+// Aisle Checker UI entry point — Vite + React 18 strict-mode root.
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
