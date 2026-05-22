@@ -9,6 +9,22 @@ import {
 
 test.describe('Products page', () => {
 
+  // END-TO-END VERIFICATION ONLY — do NOT merge. Brand-new branch off
+  // main with NO prior cache, so GitHub Actions cache restore falls
+  // through to main's cache (populated by PR #13's merge run, now
+  // that all three gap fixes — Oracle PR #51/#52/#53 — are on main).
+  //
+  // Expected this time:
+  //   [oracle] autofix mode=auto topology=monorepo_e2e/full allowsAuto=true
+  //   decision=approved
+  //   driftKind=locator_drift_data_testid_only
+  //   driftConfidence=0.90
+  test(`${testTags.SMOKE} ${testTags.PRODUCTS} VERIFY-E2E: flake-shaped`, async ({ page }) => {
+    await page.goto('/')
+    await expect(page.getByTestId('in-stock-badge'))
+      .toBeVisible({ timeout: 500 })
+  })
+
   test(`${testTags.SMOKE} ${testTags.PRODUCTS} PROD-001: products page loads and displays all products`, async ({
     productsPage,
   }) => {
