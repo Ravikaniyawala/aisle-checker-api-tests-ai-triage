@@ -264,6 +264,33 @@ jobs:
       atlassian-project-key: ${{ secrets.ATLASSIAN_PROJECT_KEY }}
       slack-webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
 
+  # Stage 3b: TestHealer (Phase 1 — dry-run only).
+  #
+  # Consumes oracle-triage's autofix queue + failure-context
+  # artifacts. For every approved heal candidate, asks Claude for
+  # a unified diff that would fix the failing test, and posts a
+  # sticky comment to the originating PR with the proposed diffs.
+  # No side effects: no branches, no PRs, no state mutation.
+  #
+  # Gated on `autofix-queue-approved != '0'` so the job only runs
+  # when there's something to heal. Saves CI minutes on the green
+  # path. `always()` lets the healer run even if a sibling job
+  # (deploy-blocked) failed — healing doesn't gate deployment.
+  #
+  # Runs in parallel with the deploy / deploy-blocked jobs.
+  #
+  # Design: docs/test-healer-design.md in the Oracle repo.
+  test-healer:
+    name: TestHealer (Phase 1 dry-run)
+    needs: oracle-triage
+    if: |
+      always() &&
+      needs.oracle-triage.result == 'success' &&
+      needs.oracle-triage.outputs.autofix-queue-approved != '0'
+    uses: Ravikaniyawala/ai-oracle-test-failure-triage/.github/workflows/test-healer.yml@main
+    secrets:
+      anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
+
   # Stage 4a: Deploy (only when Oracle succeeded AND verdict is CLEAR)
   deploy:
     name: Deploy
