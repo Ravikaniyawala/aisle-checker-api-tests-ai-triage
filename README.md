@@ -1,7 +1,7 @@
 # Aisle Checker — API Tests + AI Triage
 
 A sample monorepo demonstrating AI-powered test failure triage via GitHub Actions.
-The pipeline builds a Spring Boot REST API, runs REST Assured tests, and feeds results to the [AI Oracle](https://github.com/Ravikaniyawala/ai-oracle-triage) reusable workflow for automatic classification and deploy gating.
+The pipeline builds a Spring Boot REST API + React UI, runs REST Assured + Playwright tests, and feeds results to the [AI Oracle](https://github.com/Ravikaniyawala/ai-oracle-triage) reusable workflow for automatic classification, deploy gating, and Phase 1 autofix-proposal commenting on PRs.
 
 ## Repo structure
 
