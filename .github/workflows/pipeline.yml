@@ -287,6 +287,18 @@ jobs:
       always() &&
       needs.oracle-triage.result == 'success' &&
       needs.oracle-triage.outputs.autofix-queue-approved != '0'
+    # The reusable workflow declares pull-requests: write on its
+    # `heal` job (to post the sticky comment). A reusable workflow
+    # cannot exceed the caller's effective GITHUB_TOKEN scope —
+    # if the calling job omits `permissions:`, the default for this
+    # repo is read-only, the requested write scope can't be granted,
+    # and the workflow fails at evaluation time with `startup_failure`
+    # (no jobs ever start). Grant the same minimum permissions the
+    # callee requests so workflow evaluation succeeds. Mirrors the
+    # `oracle-triage` calling job above.
+    permissions:
+      contents: read
+      pull-requests: write
     uses: Ravikaniyawala/ai-oracle-test-failure-triage/.github/workflows/test-healer.yml@main
     secrets:
       anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
