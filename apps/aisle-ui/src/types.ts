@@ -1,3 +1,4 @@
+// Domain types shared between API client + page components.
 export type Product = {
   id: number
   name: string
