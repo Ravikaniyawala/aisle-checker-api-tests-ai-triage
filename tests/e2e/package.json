@@ -9,7 +9,9 @@
     "test:debug": "playwright test --debug",
     "test:report": "playwright show-report",
     "typecheck": "tsc --noEmit",
-    "lint:anti-patterns": "node scripts/lint-anti-patterns.mjs"
+    "lint:anti-patterns": "node scripts/lint-anti-patterns.mjs",
+    "validate:inventory": "node scripts/validate-inventory.mjs",
+    "agent:ci:prepare": "node scripts/prepare-agent-ci.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.52.0",

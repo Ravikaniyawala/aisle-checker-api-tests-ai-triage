@@ -1,0 +1,74 @@
+purpose: "Define the CI-friendly planner-to-writer agent handoff for the aisle-checker Playwright e2e framework."
+
+working_directory: "tests/e2e"
+
+sequence:
+  - id: "planner"
+    role: "QA Test Planner"
+    prompt_file: "prompts/qa-test-planner.md"
+    request_artifact: "agent-artifacts/requests/planner-request.md"
+    output_artifact: "agent-artifacts/plans/test-plan.md"
+    allowed_actions:
+      - "Read repo metadata (.ai/*.yml files)."
+      - "Search existing tests and coverage in tests/e2e/tests/."
+      - "Write a test plan artifact."
+    forbidden_actions:
+      - "Edit code."
+      - "Create tests."
+      - "Reference production or private systems."
+
+  - id: "writer"
+    role: "Playwright Test Writer"
+    prompt_file: "prompts/playwright-test-writer.md"
+    request_artifact: "agent-artifacts/requests/writer-request.md"
+    required_input_artifact: "agent-artifacts/plans/test-plan.md"
+    output_artifact: "agent-artifacts/writer/change-summary.md"
+    allowed_actions:
+      - "Read planner artifact and repo metadata."
+      - "Use Playwright CLI for optional headless, non-interactive browser inspection when CI runner support is available."
+      - "Write unresolved locator or flow discovery questions to the writer summary when CI cannot derive them from metadata, existing code, or headless inspection."
+      - "Write framework-style Playwright TypeScript tests directly under tests/e2e/tests/."
+      - "Update page objects under tests/e2e/src/pages/ only when the framework needs a reusable page action."
+      - "Update .ai/test-inventory.yml when test coverage changes."
+      - "Run typecheck and targeted tests."
+      - "Run test inventory validation."
+      - "Open a draft pull request after generated test changes pass validation."
+    forbidden_actions:
+      - "Run Playwright codegen as a CI step."
+      - "Run Playwright CLI with --headed, npm run test:headed, or any headed browser workflow in CI."
+      - "Hardcode product IDs or store IDs in specs — use named aliases from src/test-data/products.ts."
+      - "Use arbitrary waits."
+      - "Bypass page objects, fixtures, helpers, or test data patterns."
+
+ci_artifact_contract:
+  planner_request: "agent-artifacts/requests/planner-request.md"
+  writer_request: "agent-artifacts/requests/writer-request.md"
+  planner_output: "agent-artifacts/plans/test-plan.md"
+  writer_summary: "agent-artifacts/writer/change-summary.md"
+
+writer_discovery_policy:
+  playwright_cli: "Allowed in CI only for explicit headless, non-interactive flow confirmation, locator discovery, screenshots, and live page inspection."
+  codegen: "Not part of the CI sequence. The writer should write framework-style tests directly."
+  headed_mode: "Forbidden in CI. Do not pass --headed or use npm run test:headed."
+  direct_write: "Preferred when existing metadata, page objects, and tests describe the flow."
+  base_url: "Use BASE_URL env var or the default http://localhost:5173 (dev) / http://localhost:4173 (preview). Never hardcode the base URL in tests."
+  unresolved_discovery: "If CI cannot determine a locator or flow from existing artifacts or headless inspection, the writer should stop or record the blocker in agent-artifacts/writer/change-summary.md for follow-up."
+
+required_validation:
+  - "npm run typecheck"
+  - "npm run validate:inventory"
+  - "Run the targeted Playwright spec changed by the writer in normal headless Playwright Test mode."
+  - "Run npm test when the change touches shared page objects, fixtures, or test data."
+
+pull_request_contract:
+  workflow: ".github/workflows/agentic-qa-sequence.yml"
+  branch_pattern: "agentic-tests/<github-run-id>"
+  default_pr_state: "draft"
+  create_pr_when:
+    - "The writer produced source, test, metadata, or documentation changes."
+    - "Typecheck and Playwright validation completed successfully."
+  ignored_paths:
+    - "agent-artifacts/"
+  token_notes:
+    - "Use AGENT_PR_TOKEN when generated PRs should trigger normal pull_request workflows."
+    - "Fallback to GITHUB_TOKEN is supported for branch and PR creation, but downstream workflow triggering is limited by GitHub Actions token rules."

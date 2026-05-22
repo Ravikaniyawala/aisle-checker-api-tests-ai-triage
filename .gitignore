@@ -13,3 +13,6 @@ test-results/
 # Misc
 .DS_Store
 *.class
+
+# Claude Code local settings (machine-specific paths, never commit)
+.claude/settings.local.json

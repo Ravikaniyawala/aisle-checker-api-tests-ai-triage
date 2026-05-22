@@ -1,0 +1,115 @@
+tests:
+  # ── Products page ─────────────────────────────────────────────────────────
+  - id: "PROD-001"
+    title: "products page loads and displays all products"
+    file: "tests/e2e/tests/products/products.spec.ts"
+    feature_area: "products"
+    coverage: "Products page renders the full catalogue (6 products) and the product-list container is visible."
+    tags: ["@smoke", "@products"]
+
+  - id: "PROD-002"
+    title: "each product card shows name, price, aisle, and availability badge"
+    file: "tests/e2e/tests/products/products.spec.ts"
+    feature_area: "products"
+    coverage: "Every product card in the catalogue displays correct name, price, aisle, and availability status."
+    tags: ["@regression", "@products"]
+
+  - id: "PROD-003"
+    title: "in-stock product shows correct badge"
+    file: "tests/e2e/tests/products/products.spec.ts"
+    feature_area: "products"
+    coverage: "Full Cream Milk 2L card shows availability-badge with data-status=in_stock and text 'In Stock'."
+    tags: ["@regression", "@products"]
+
+  - id: "PROD-004"
+    title: "out-of-stock product shows correct badge"
+    file: "tests/e2e/tests/products/products.spec.ts"
+    feature_area: "products"
+    coverage: "Free Range Eggs 12pk card shows availability-badge with data-status=out_of_stock and text 'Out of Stock'."
+    tags: ["@regression", "@products"]
+
+  - id: "PROD-005"
+    title: "low-stock product shows correct badge"
+    file: "tests/e2e/tests/products/products.spec.ts"
+    feature_area: "products"
+    coverage: "Cheddar Cheese 500g card shows availability-badge with data-status=low_stock and text 'Low Stock'."
+    tags: ["@regression", "@products"]
+
+  - id: "PROD-006"
+    title: "clicking a product card navigates to product detail"
+    file: "tests/e2e/tests/products/products.spec.ts"
+    feature_area: "products"
+    coverage: "Clicking an in-stock product card navigates to the detail page and shows the product name."
+    tags: ["@regression", "@products"]
+
+  # ── Product detail page ───────────────────────────────────────────────────
+  - id: "DETAIL-001"
+    title: "product detail page shows correct information"
+    file: "tests/e2e/tests/product-detail/product-detail.spec.ts"
+    feature_area: "product-detail"
+    coverage: "Detail page for Full Cream Milk 2L displays correct name, price, and aisle."
+    tags: ["@smoke", "@product-detail"]
+
+  - id: "DETAIL-002"
+    title: "detail page shows availability from API for in-stock product"
+    file: "tests/e2e/tests/product-detail/product-detail.spec.ts"
+    feature_area: "product-detail"
+    coverage: "Detail page fetches availability and shows data-status=in_stock with badge text 'In Stock'."
+    tags: ["@regression", "@product-detail"]
+
+  - id: "DETAIL-003"
+    title: "detail page shows availability from API for out-of-stock product"
+    file: "tests/e2e/tests/product-detail/product-detail.spec.ts"
+    feature_area: "product-detail"
+    coverage: "Detail page fetches availability and shows data-status=out_of_stock with badge text 'Out of Stock'."
+    tags: ["@regression", "@product-detail"]
+
+  - id: "DETAIL-004"
+    title: "detail page shows availability from API for low-stock product"
+    file: "tests/e2e/tests/product-detail/product-detail.spec.ts"
+    feature_area: "product-detail"
+    coverage: "Detail page fetches availability and shows data-status=low_stock with badge text 'Low Stock'."
+    tags: ["@regression", "@product-detail"]
+
+  - id: "DETAIL-005"
+    title: "back link navigates to products page"
+    file: "tests/e2e/tests/product-detail/product-detail.spec.ts"
+    feature_area: "product-detail"
+    coverage: "Clicking the back-link from a product detail page navigates back to the products-page container."
+    tags: ["@regression", "@product-detail"]
+
+  # ── Stores page ───────────────────────────────────────────────────────────
+  - id: "STORE-001"
+    title: "stores page loads and shows all store locations"
+    file: "tests/e2e/tests/stores/stores.spec.ts"
+    feature_area: "stores"
+    coverage: "Stores page renders both store cards (North Store, South Store)."
+    tags: ["@smoke", "@stores"]
+
+  - id: "STORE-002"
+    title: "selecting North Store shows its products"
+    file: "tests/e2e/tests/stores/stores.spec.ts"
+    feature_area: "stores"
+    coverage: "Clicking North Store reveals 4 product cards matching northStoreProducts (IDs 1, 2, 3, 4)."
+    tags: ["@regression", "@stores"]
+
+  - id: "STORE-003"
+    title: "selecting South Store shows its products"
+    file: "tests/e2e/tests/stores/stores.spec.ts"
+    feature_area: "stores"
+    coverage: "Clicking South Store reveals 4 product cards matching southStoreProducts (IDs 1, 4, 5, 6)."
+    tags: ["@regression", "@stores"]
+
+  - id: "STORE-004"
+    title: "North Store does not contain South-only products"
+    file: "tests/e2e/tests/stores/stores.spec.ts"
+    feature_area: "stores"
+    coverage: "After selecting North Store, Organic Pasta 500g and Orange Juice 1L are absent and product count is 4."
+    tags: ["@regression", "@stores"]
+
+  - id: "STORE-005"
+    title: "navbar Stores link navigates from products page"
+    file: "tests/e2e/tests/stores/stores.spec.ts"
+    feature_area: "stores"
+    coverage: "Clicking nav-stores from the products page navigates to the stores-page container."
+    tags: ["@regression", "@stores"]

@@ -1,0 +1,86 @@
+source_file: "tests/e2e/src/test-data/products.ts"
+
+products:
+  - id: 1
+    name: "Full Cream Milk 2L"
+    price: "$3.49"
+    aisle: "A3"
+    availability: "in_stock"
+    alias: "inStockProduct"
+    stores: ["North Store", "South Store"]
+
+  - id: 2
+    name: "Sourdough Bread"
+    price: "$5.99"
+    aisle: "B1"
+    availability: "in_stock"
+    stores: ["North Store"]
+
+  - id: 3
+    name: "Free Range Eggs 12pk"
+    price: "$7.49"
+    aisle: "A5"
+    availability: "out_of_stock"
+    alias: "outOfStockProduct"
+    stores: ["North Store"]
+
+  - id: 4
+    name: "Cheddar Cheese 500g"
+    price: "$8.99"
+    aisle: "A3"
+    availability: "low_stock"
+    alias: "lowStockProduct"
+    stores: ["North Store", "South Store"]
+
+  - id: 5
+    name: "Organic Pasta 500g"
+    price: "$4.29"
+    aisle: "C2"
+    availability: "in_stock"
+    stores: ["South Store"]
+
+  - id: 6
+    name: "Orange Juice 1L"
+    price: "$4.99"
+    aisle: "A3"
+    availability: "out_of_stock"
+    stores: ["South Store"]
+
+stores:
+  - id: "north"
+    name: "North Store"
+    product_ids: [1, 2, 3, 4]
+    alias: "northStoreProducts"
+
+  - id: "south"
+    name: "South Store"
+    product_ids: [1, 4, 5, 6]
+    alias: "southStoreProducts"
+
+named_aliases:
+  inStockProduct: "Full Cream Milk 2L (id=1)"
+  outOfStockProduct: "Free Range Eggs 12pk (id=3)"
+  lowStockProduct: "Cheddar Cheese 500g (id=4)"
+  northStoreProducts: "products with ids 1, 2, 3, 4"
+  southStoreProducts: "products with ids 1, 4, 5, 6"
+
+availability_values:
+  in_stock:
+    data_status: "in_stock"
+    badge_text: "In Stock"
+    rule: "available=true AND price <= 7.0"
+  low_stock:
+    data_status: "low_stock"
+    badge_text: "Low Stock"
+    rule: "available=true AND price > 7.0"
+  out_of_stock:
+    data_status: "out_of_stock"
+    badge_text: "Out of Stock"
+    rule: "available=false"
+
+rules:
+  - "Use named aliases (inStockProduct, outOfStockProduct, lowStockProduct) rather than hardcoding product IDs in specs."
+  - "Import constants from tests/e2e/src/test-data/products.ts."
+  - "Do not redeclare ProductTestData-shaped types — import the type from the source file."
+  - "Availability assertions must use data-status attribute, not badge text, unless explicitly testing display text."
+  - "Do not add store or product data that does not exist in the running API."
