@@ -1,3 +1,4 @@
+// App router — products / product-detail / stores live under a shared NavBar layout.
 import { createHashRouter, RouterProvider } from 'react-router-dom'
 import NavBar from './components/NavBar'
 import ProductsPage from './pages/ProductsPage'
