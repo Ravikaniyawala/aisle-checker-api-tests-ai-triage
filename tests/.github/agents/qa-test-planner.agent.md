@@ -30,7 +30,7 @@ Convert requirements or acceptance criteria into a clear QA test plan for the ai
 
 Requirement: "North Store only shows its assigned products."
 
-Good handoff: select North Store, assert product count is 4, assert each of the 4 `northStoreProducts` is visible, assert Organic Pasta 500g and Orange Juice 1L (South-only) are absent.
+Good handoff: select North Store, assert product count equals `northStoreProducts.length`, assert each product in `northStoreProducts` is visible by name. For the negative assertions, derive South-only products from typed test data — `southStoreProducts.filter(p => !northStoreProducts.some(n => n.id === p.id))` — and assert each derived product name is absent. Never hardcode product name strings in the handoff or in the generated test.
 
 ## Required output format
 
