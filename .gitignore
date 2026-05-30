@@ -10,6 +10,9 @@ playwright-report/
 playwright-results/
 test-results/
 
+# Agent CI handoff artifacts (generated at runtime, never commit)
+tests/e2e/agent-artifacts/
+
 # Misc
 .DS_Store
 *.class

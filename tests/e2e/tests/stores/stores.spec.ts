@@ -1,6 +1,14 @@
 import { test, expect } from '../../src/fixtures/base'
 import { testTags } from '../../src/helpers/testTags'
-import { stores, northStoreProducts, southStoreProducts } from '../../src/test-data/products'
+import { stores, northStoreProducts, southStoreProducts, products } from '../../src/test-data/products'
+
+// Derived once — never hardcode product name strings (AP-003 / typed-data rule)
+const southOnlyProducts = products.filter(
+  p => southStoreProducts.some(s => s.id === p.id) && !northStoreProducts.some(n => n.id === p.id)
+)
+const northOnlyProducts = products.filter(
+  p => northStoreProducts.some(n => n.id === p.id) && !southStoreProducts.some(s => s.id === p.id)
+)
 
 test.describe('Stores page', () => {
 
@@ -27,6 +35,10 @@ test.describe('Stores page', () => {
     for (const product of northStoreProducts) {
       await storesPage.expectStoreProductVisible(product.name)
     }
+    // AP-006: South-only products must not appear in North Store
+    for (const p of southOnlyProducts) {
+      await storesPage.expectStoreProductNotVisible(p.name)
+    }
   })
 
   test(`${testTags.REGRESSION} ${testTags.STORES} STORE-003: selecting South Store shows its products`, async ({
@@ -41,6 +53,10 @@ test.describe('Stores page', () => {
     for (const product of southStoreProducts) {
       await storesPage.expectStoreProductVisible(product.name)
     }
+    // AP-006: North-only products must not appear in South Store
+    for (const p of northOnlyProducts) {
+      await storesPage.expectStoreProductNotVisible(p.name)
+    }
   })
 
   test(`${testTags.REGRESSION} ${testTags.STORES} STORE-004: North Store does not contain South-only products`, async ({
@@ -51,10 +67,11 @@ test.describe('Stores page', () => {
     await storesPage.selectStore('North Store')
     await storesPage.expectStoreProductsVisible()
 
-    // Organic Pasta and Orange Juice are South Store only — must not appear in North
-    await storesPage.expectStoreProductNotVisible('Organic Pasta 500g')
-    await storesPage.expectStoreProductNotVisible('Orange Juice 1L')
+    // AP-006: count first, then named negatives derived from typed test data
     await storesPage.expectStoreProductCount(northStoreProducts.length)
+    for (const p of southOnlyProducts) {
+      await storesPage.expectStoreProductNotVisible(p.name)
+    }
   })
 
   test(`${testTags.REGRESSION} ${testTags.STORES} STORE-005: navbar Stores link navigates from products page`, async ({
