@@ -40,7 +40,8 @@ export default function ProductDetailPage() {
           <div className="detail-row">
             <span className="detail-label">Price</span>
             <span className="detail-value" data-test="detail-product-price">
-              ${product.price.toFixed(2)}
+              {/* Show GST-inclusive price (NZ GST 15%) */}
+              ${(product.price * 1.15).toFixed(2)}
             </span>
           </div>
           <div className="detail-row">
